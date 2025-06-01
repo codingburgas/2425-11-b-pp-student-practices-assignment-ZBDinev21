@@ -1,0 +1,13 @@
+Flask
+Flask-WTF
+Flask-SQLAlchemy
+Flask-Login
+Flask-Mail
+Flask-Migrate
+Flask-Bootstrap
+itsdangerous
+bcrypt
+pyodbc
+scikit-learn
+joblib
+numpy

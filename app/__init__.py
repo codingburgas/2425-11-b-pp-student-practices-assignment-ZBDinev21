@@ -3,7 +3,9 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager
 from flask_mail import Mail
 from flask_migrate import Migrate
-from config import db_config
+from app.config import db_config
+from sqlalchemy.dialects.mysql import pyodbc
+from app.routes.Main import main_bp
 
 # Initialize extensions
 db = SQLAlchemy()
@@ -12,16 +14,24 @@ mail = Mail()
 migrate = Migrate()
 
 
-def create_app():
+def create_app(main_bp=None):
     app = Flask(__name__)
-
+    app.secret_key = 'your_secret_key'  # Secret key for session management
+    app.register_blueprint(main_bp)
+    
     # Config setup
-    app.config['SECRET_KEY'] = 'your_secret_key'
-    app.config['SQLALCHEMY_DATABASE_URI'] = (
-        f"mssql+pyodbc://{db_config['username']}:{db_config['password']}@"
-        f"{db_config['server']}:{db_config['port']}/{db_config['database']}?"
-        f"driver={db_config['driver']}"
-    )
+    db_config = '/config.py'
+
+    def get_db_connection():
+        connection_string = (
+            f"DRIVER={db_config['driver']};"
+            f"SERVER={db_config['server']};"
+            f"PORT=1433;"
+            f"DATABASE={db_config['database']};"
+            f"UID={db_config['username']};"
+            f"PWD={db_config['password']}"
+        )
+        return pyodbc.connect(connection_string)
 
     # Initialize extensions
     db.init_app(app)
@@ -30,9 +40,9 @@ def create_app():
     migrate.init_app(app, db)
 
     # Register Blueprints
-    from app.routes.Аuth import auth_bp
-    from app.routes.Мain import main_bp
-    from app.routes.Аdmin import admin_bp
+    from app.routes.Auth import auth_bp
+    from app.routes.Main import main_bp
+    from app.routes.Admin import admin_bp
 
     app.register_blueprint(auth_bp)
     app.register_blueprint(main_bp)

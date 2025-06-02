@@ -1,21 +1,20 @@
 from flask import Blueprint, render_template, request, flash, session
 from app.forms import SurveyForm
 from app.models import SurveyResponse
-from app import db
+from app.config import db
 import numpy as np
 from sklearn.linear_model import LogisticRegression
 
-main_bp = Blueprint('main', __name__)
+main_bp = Blueprint('main', __name__)  # ✅ Fixed blueprint name
 
-# Dummy trained model (replace with real trained model in production)
 model = LogisticRegression()
 model.coef_ = np.array([[0.3]*5])
 model.intercept_ = np.array([-2.0])
 model.classes_ = np.array([0, 1])
 
-@main_bp.route('/')
+@main_bp.route('/home')
 def home():
-    return render_template('home.html')
+    return render_template('home.html')  # ✅ this still points to templates/home.html
 
 @main_bp.route('/survey', methods=['GET', 'POST'])
 def survey():

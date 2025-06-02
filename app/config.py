@@ -1,8 +1,6 @@
 from flask_sqlalchemy import SQLAlchemy
 import urllib
 
-db_config = SQLAlchemy()
-db = db_config
 class Config:
     DRIVER = "ODBC Driver 17 for SQL Server"
 

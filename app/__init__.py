@@ -1,11 +1,12 @@
-from flask import Flask
+from flask import Flask, render_template
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager
 from flask_mail import Mail
 from flask_migrate import Migrate
-from app.config import db_config
+from app.extensions import db
 from sqlalchemy.dialects.mysql import pyodbc
 from app.routes.Main import main_bp
+
 
 # Initialize extensions
 db = SQLAlchemy()
@@ -49,3 +50,7 @@ def create_app(main_bp=None):
     app.register_blueprint(admin_bp)
 
     return app
+
+@main_bp.errorhandler(404)
+def page_not_found(e):
+    return render_template('404.html'), 404

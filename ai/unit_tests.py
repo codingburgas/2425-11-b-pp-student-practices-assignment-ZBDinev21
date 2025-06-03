@@ -1,6 +1,6 @@
 import unittest
 import numpy as np
-from ai.logistic_model import LogisticRegressionCustom
+from ai.logistic_custom import LogisticRegressionCustom
 
 class TestLogisticRegressionCustom(unittest.TestCase):
 

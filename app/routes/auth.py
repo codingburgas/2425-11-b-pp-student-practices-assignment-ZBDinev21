@@ -1,10 +1,11 @@
 from flask import Blueprint, render_template, redirect, request, flash, session, url_for
 from app.models import User
 import bcrypt
+from run import app
 
 auth_bp = Blueprint('auth', __name__)
 
-@auth_bp.route('/login', methods=['GET', 'POST'])
+@app.route('/login', methods=['GET', 'POST'])
 def login():
     if request.method == 'POST':
         username = request.form['username']
@@ -18,7 +19,7 @@ def login():
             return redirect(url_for('main.home'))
         else:
             flash('Invalid credentials.', 'danger')
-    return render_template('login.html')
+    return render_template('../../templates/login.html')
 
 @auth_bp.route('/logout')
 def logout():

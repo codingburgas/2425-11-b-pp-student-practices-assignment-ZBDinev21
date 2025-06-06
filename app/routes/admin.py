@@ -14,7 +14,7 @@ def restrict_to_admin():
 def dashboard():
     users = User.query.all()
     surveys = SurveyResponse.query.order_by(SurveyResponse.created_at.desc()).all()
-    return render_template('admin/dashboard.html', users=users, surveys=surveys)
+    return render_template('dashboard.html', users=users, surveys=surveys)
 
 @admin_bp.route('/delete_user/<int:user_id>')
 def delete_user(user_id):

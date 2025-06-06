@@ -12,4 +12,4 @@ def edit():
         db.session.commit()
         flash('Profile updated.', 'success')
         return redirect(url_for('profile.edit'))
-    return render_template('../../templates/edit_profile.html', user=current_user)
+    return render_template('edit_profile.html', user=current_user)

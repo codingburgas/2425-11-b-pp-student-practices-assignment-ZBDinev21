@@ -19,7 +19,7 @@ def login():
             return redirect(url_for('main.home'))
         else:
             flash('Invalid credentials.', 'danger')
-    return render_template('../../templates/login.html')
+    return render_template('login.html')
 
 @auth_bp.route('/logout')
 def logout():

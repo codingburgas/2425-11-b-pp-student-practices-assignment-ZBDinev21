@@ -10,7 +10,7 @@ class User(UserMixin, db.Model):
     username = db.Column(db.String(150), nullable=False, unique=True)
     password = db.Column(db.String(256), nullable=False)
     role = db.Column(db.String(20), default='user')
-    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+    created_at = db.Column(db.DateTime, default=datetime)
 
 class SurveyForm(FlaskForm):
     q1 = IntegerField('Little interest or pleasure in doing things', validators=[DataRequired(), NumberRange(min=0, max=3)])
@@ -25,6 +25,6 @@ class SurveyResponse(db.Model):
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
     responses = db.Column(db.Text, nullable=False)
     prediction = db.Column(db.String(100))
-    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+    created_at = db.Column(db.DateTime, default=datetime)
 
     user = db.relationship('User', backref=db.backref('surveys', lazy=True))

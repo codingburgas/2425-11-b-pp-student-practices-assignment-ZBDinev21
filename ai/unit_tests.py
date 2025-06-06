@@ -7,12 +7,12 @@ class TestLogisticRegressionCustom(unittest.TestCase):
     def setUp(self):
         self.X = np.array([[0], [1], [2], [3], [4], [5]])
         self.y = np.array([0, 0, 0, 1, 1, 1])
-        self.model = LogisticRegressionCustom(learning_rate=0.1, n_iters=1000)
+        self.model = LogisticRegressionCustom(n_iters=1000)
         self.model.fit(self.X, self.y)
 
     def test_prediction_accuracy(self):
         preds = self.model.predict(self.X)
-        acc = self.model.accuracy(self.y, preds)
+        acc = accuracy(self.y, preds)
         self.assertGreaterEqual(acc, 0.8)
 
     def test_loss_output(self):
@@ -22,7 +22,7 @@ class TestLogisticRegressionCustom(unittest.TestCase):
 
     def test_confusion_matrix_keys(self):
         preds = self.model.predict(self.X)
-        matrix = self.model.confusion_matrix(self.y, preds)
+        matrix = confusion_matrix(self.y, preds)
         self.assertIn('TP', matrix)
         self.assertIn('TN', matrix)
         self.assertIn('FP', matrix)

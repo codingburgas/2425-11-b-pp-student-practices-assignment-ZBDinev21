@@ -37,4 +37,4 @@ def survey():
         db.session.commit()
         flash('Survey submitted.', 'success')
 
-    return render_template('../../templates/survey.html', form=form, prediction=prediction)
+    return render_template('survey.html', form=form, prediction=prediction)

@@ -1,11 +1,12 @@
+
+
 from flask import Blueprint, render_template, redirect, request, flash, session, url_for
 from app.models import User
 import bcrypt
-from run import app
 
-auth_bp = Blueprint('auth', __name__)
+auth_bp = Blueprint('auth', __name__, template_folder='templates')
 
-@app.route('/login', methods=['GET', 'POST'])
+@auth_bp.route('/login', methods=['GET', 'POST'])
 def login():
     if request.method == 'POST':
         username = request.form['username']

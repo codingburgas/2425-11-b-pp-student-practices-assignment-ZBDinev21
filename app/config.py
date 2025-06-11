@@ -7,21 +7,7 @@ class Config:
 
     DATABASE = "projectJune"
 
-    SQLALCHEMY_DATABASE_URI = (
-
-        "mssql+pyodbc://@{server}/{db}?driver={driver}&trusted_connection=yes"
-
-        .format(
-
-            server=SERVER,
-
-            db=DATABASE,
-
-            driver=urllib.parse.quote_plus(DRIVER)
-
-        )
-
-    )
+    SQLALCHEMY_DATABASE_URI = "sqlite:///projectJune.db"
 
     SQLALCHEMY_TRACK_MODIFICATIONS = False
 

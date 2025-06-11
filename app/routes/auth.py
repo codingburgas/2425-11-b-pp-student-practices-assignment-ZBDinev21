@@ -1,6 +1,4 @@
-
-
-from flask import Blueprint, render_template, redirect, request, flash, session, url_for
+from flask import Blueprint, redirect, request, flash, session, url_for
 from app.models import User
 import bcrypt
 
@@ -20,7 +18,6 @@ def login():
             return redirect(url_for('main.home'))
         else:
             flash('Invalid credentials.', 'danger')
-    return render_template('login.html')
 
 @auth_bp.route('/logout')
 def logout():

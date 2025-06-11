@@ -2,7 +2,10 @@ import numpy as np
 
 
 def sigmoid(x):
+    # Clip input to prevent overflow
+    x = np.clip(x, -500, 500)
     return 1 / (1 + np.exp(-x))
+
 
 
 def accuracy(y_true, y_pred):
@@ -10,10 +13,12 @@ def accuracy(y_true, y_pred):
 
 
 def confusion_matrix(y_true, y_pred):
-    TP = sum((y_true[i] == 1 and y_pred[i] == 1) for i in range(len(y_true)))
-    TN = sum((y_true[i] == 0 and y_pred[i] == 0) for i in range(len(y_true)))
-    FP = sum((y_true[i] == 0 and y_pred[i] == 1) for i in range(len(y_true)))
-    FN = sum((y_true[i] == 1 and y_pred[i] == 0) for i in range(len(y_true)))
+    y_true = np.array(y_true)
+    y_pred = np.array(y_pred)
+    TP = np.sum((y_true == 1) & (y_pred == 1))
+    TN = np.sum((y_true == 0) & (y_pred == 0))
+    FP = np.sum((y_true == 0) & (y_pred == 1))
+    FN = np.sum((y_true == 1) & (y_pred == 0))
     return {'TP': TP, 'TN': TN, 'FP': FP, 'FN': FN}
 
 
@@ -35,6 +40,6 @@ class LogisticRegressionCustom:
             self.weights -= self.lr * dw
             self.bias -= self.lr * db
 
-    def predict(self, X):
+    def predict(self, X, threshold=0.5):
         preds = sigmoid(np.dot(X, self.weights) + self.bias)
-        return [1 if p > 0.5 else 0 for p in preds]
+        return [1 if p > threshold else 0 for p in preds]

@@ -1,4 +1,4 @@
-from flask import Flask, render_template
+from flask import Flask
 from flask_login import LoginManager
 from flask_mail import Mail
 from flask_migrate import Migrate
@@ -18,16 +18,14 @@ def create_app():
     mail.init_app(app)
     migrate.init_app(app, db)
 
-    from .routes.auth import auth_bp
+    login_manager.login_view = 'auth.login'
+
+    from app.routes.auth import auth_bp
     from app.routes.main import main_bp
     from app.routes.admin import admin_bp
 
     app.register_blueprint(auth_bp, url_prefix='/auth')
-    app.register_blueprint(main_bp)
-    app.register_blueprint(admin_bp)
-
-    @app.errorhandler(404)
-    def page_not_found(e):
-        return render_template('../templates/404.html'), 404
+    app.register_blueprint(main_bp, url_prefix='/main')
+    app.register_blueprint(admin_bp, url_prefix='/admin')
 
     return app

@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template, request, redirect, url_for, flash
+from flask import Blueprint, request, redirect, url_for, flash
 from flask_login import login_required, current_user
 from app.extensions import db
 
@@ -12,4 +12,3 @@ def edit():
         db.session.commit()
         flash('Profile updated.', 'success')
         return redirect(url_for('profile.edit'))
-    return render_template('edit_profile.html', user=current_user)

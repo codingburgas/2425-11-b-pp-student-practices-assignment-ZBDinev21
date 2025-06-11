@@ -1,5 +1,3 @@
-import urllib
-
 class Config:
     DRIVER = "ODBC Driver 17 for SQL Server"
 

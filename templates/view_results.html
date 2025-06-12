@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="View your mental health survey results" />
+  <title>Survey Results - MH Classifier</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" />
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background-color: #f5f7fa;
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+    }
+
+    .gradient-section {
+      background: linear-gradient(135deg, #7f7fd5, #86a8e7, #91eae4);
+      padding: 4rem 1rem;
+      border-radius: 0 0 40px 40px;
+      color: white;
+    }
+
+    .results-card {
+      background-color: white;
+      padding: 3rem;
+      border-radius: 20px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+      margin-top: -60px;
+      margin-bottom: 2rem;
+    }
+    .question {
+      font-weight: 500;
+      color: #212529;
+    }
+    .answer {
+      font-style: italic;
+      color: #4a4a4a;
+    }
+
+    /* Accessibility improvements */
+    .btn:focus, .navbar-toggler:focus {
+      box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
+    }
+
+    footer {
+      margin-top: auto;
+      padding: 2rem 0;
+      background-color: #f8f9fa;
+    }
+
+    .list-group-item {
+      padding: 1rem 1.25rem;
+    }
+  </style>
+</head>
+<body>
+  <!-- Navigation -->
+  <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <div class="container">
+      <a class="navbar-brand fw-semibold" href="/">MH Classifier</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav me-auto">
+          <li class="nav-item"><a class="nav-link" href="/">Home</a></li>
+          <li class="nav-item"><a class="nav-link" href="/learn_more">How It Works</a></li>
+        </ul>
+        <a href="/login" class="btn btn-outline-light">Login</a>
+      </div>
+    </div>
+  </nav>
+
+  <main>
+    <!-- Gradient Header -->
+    <div class="gradient-section text-center">
+      <h1 class="h2">Your Survey Results</h1>
+      <p class="lead">See your responses below. Remember, this is not a diagnosis.</p>
+    </div>
+
+    <!-- Results Card -->
+    <div class="container">
+      <div class="results-card mx-auto mt-5" style="max-width: 700px;">
+        <h2 class="h4 mb-4">Your Answers</h2>
+        <ol class="list-group list-group-numbered mb-4">
+          {% set questions = [
+            "How often have you felt little interest or pleasure in doing things?",
+            "How often have you felt down, depressed, or hopeless?",
+            "How often have you had trouble falling or staying asleep, or sleeping too much?",
+            "How often have you felt tired or had little energy?",
+            "How often have you had poor appetite or overeating?",
+            "How often have you felt bad about yourself — or that you're a failure or have let yourself or your family down?",
+            "How often have you had trouble concentrating on things, such as reading or watching TV?",
+            "How often have you moved or spoken slowly — or been fidgety/restless more than usual?",
+            "How often have you had thoughts that you would be better off dead or of hurting yourself?",
+            "How often do you feel overwhelmed by daily responsibilities?",
+            "How often do you feel anxious or on edge?",
+            "How often do you avoid social interactions?",
+            "How often do you feel confident about yourself?",
+            "How often do you feel hopeful about the future?",
+            "How supported do you feel by friends or family?"
+          ] %}
+          {% set answer_options = [
+            ["Not at all", "Several days", "More than half the days", "Nearly every day"],  # 1-9,11
+            ["Never", "Sometimes", "Often", "Always"],  # 10
+            ["Never", "Rarely", "Sometimes", "Frequently"],  # 12
+            ["Always", "Most of the time", "Sometimes", "Rarely or never"],  # 13-14
+            ["Very supported", "Somewhat supported", "Rarely supported", "Not at all supported"]  # 15
+          ] %}
+          {% for i in range(1, 16) %}
+          <li class="list-group-item d-flex flex-column">
+            <span class="question">{{ questions[i-1] }}</span>
+            <span class="answer">
+              {% set val = results['q' ~ i]|int %}
+              {% if i in [13, 14] %}
+                {{ answer_options[3][val] }}
+              {% elif i == 15 %}
+                {{ answer_options[4][val] }}
+              {% elif i == 12 %}
+                {{ answer_options[2][val] }}
+              {% elif i == 10 %}
+                {{ answer_options[1][val] }}
+              {% else %}
+                {{ answer_options[0][val] }}
+              {% endif %}
+            </span>
+          </li>
+          {% endfor %}
+        </ol>
+
+        {% if score is defined %}
+        <div class="alert alert-info text-center" role="alert">
+          <strong>Your total score:</strong> {{ score }}
+        </div>
+        {% endif %}
+
+        <div class="text-center mt-4">
+          <a href="/survey" class="btn btn-primary">Retake Survey</a>
+          <a href="/" class="btn btn-outline-secondary ms-2">Home</a>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer class="bg-light">
+    <div class="container">
+      <p class="mb-1">&copy; 2025 Mental Health Classifier Project</p>
+      <small class="text-muted">This survey is not a diagnostic tool. Please consult a professional if needed.</small>
+    </div>
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

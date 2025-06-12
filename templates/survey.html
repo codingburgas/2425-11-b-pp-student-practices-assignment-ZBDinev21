@@ -54,18 +54,58 @@
   <!-- Survey Form -->
   <div class="container">
     <div class="form-card mx-auto mt-5" style="max-width: 700px;">
-      <form action="/submit_survey" method="POST">
+      <form action="/view_results" method="POST">
+        {% for i in range(1, 16) %}
         <div class="mb-3">
-          <label class="form-label">How often have you felt little interest or pleasure in doing things?</label>
-          <select class="form-select" name="q1" required>
+          <label class="form-label">{{ loop.index }}.
+            {% if i == 1 %}How often have you felt little interest or pleasure in doing things?
+            {% elif i == 2 %}How often have you felt down, depressed, or hopeless?
+            {% elif i == 3 %}How often have you had trouble falling or staying asleep, or sleeping too much?
+            {% elif i == 4 %}How often have you felt tired or had little energy?
+            {% elif i == 5 %}How often have you had poor appetite or overeating?
+            {% elif i == 6 %}How often have you felt bad about yourself — or that you’re a failure or have let yourself or your family down?
+            {% elif i == 7 %}How often have you had trouble concentrating on things, such as reading or watching TV?
+            {% elif i == 8 %}How often have you moved or spoken slowly — or been fidgety/restless more than usual?
+            {% elif i == 9 %}How often have you had thoughts that you would be better off dead or of hurting yourself?
+            {% elif i == 10 %}How often do you feel overwhelmed by daily responsibilities?
+            {% elif i == 11 %}How often do you feel anxious or on edge?
+            {% elif i == 12 %}How often do you avoid social interactions?
+            {% elif i == 13 %}How often do you feel confident about yourself?
+            {% elif i == 14 %}How often do you feel hopeful about the future?
+            {% elif i == 15 %}How supported do you feel by friends or family?
+            {% endif %}
+          </label>
+          <select class="form-select" name="q{{ i }}" required>
             <option value="">Select...</option>
-            <option value="0">Not at all</option>
-            <option value="1">Several days</option>
-            <option value="2">More than half the days</option>
-            <option value="3">Nearly every day</option>
+            {% if i in [13, 14] %}
+              <option value="0">Always</option>
+              <option value="1">Most of the time</option>
+              <option value="2">Sometimes</option>
+              <option value="3">Rarely or never</option>
+            {% elif i == 15 %}
+              <option value="0">Very supported</option>
+              <option value="1">Somewhat supported</option>
+              <option value="2">Rarely supported</option>
+              <option value="3">Not at all supported</option>
+            {% elif i == 12 %}
+              <option value="0">Never</option>
+              <option value="1">Rarely</option>
+              <option value="2">Sometimes</option>
+              <option value="3">Frequently</option>
+            {% elif i == 10 %}
+              <option value="0">Never</option>
+              <option value="1">Sometimes</option>
+              <option value="2">Often</option>
+              <option value="3">Always</option>
+            {% else %}
+              <option value="0">Not at all</option>
+              <option value="1">Several days</option>
+              <option value="2">More than half the days</option>
+              <option value="3">Nearly every day</option>
+            {% endif %}
           </select>
         </div>
-        <!-- Additional questions can go here -->
+        {% endfor %}
 
         <div class="text-center mt-4">
           <button type="submit" class="btn btn-primary btn-lg">Submit Survey</button>

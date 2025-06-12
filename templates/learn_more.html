@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Learn More - MH Classifier</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css" />
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background-color: #f5f7fa;
+    }
+
+    .hero-section {
+      background: linear-gradient(135deg, #7f7fd5, #86a8e7, #91eae4);
+      color: white;
+      padding: 5rem 1rem;
+      text-align: center;
+      border-radius: 0 0 40px 40px;
+    }
+
+    .hero-section h1 {
+      font-size: 3rem;
+      font-weight: 700;
+    }
+
+    .hero-section p {
+      font-size: 1.2rem;
+      margin-top: 1rem;
+    }
+
+    .content-section {
+      padding: 4rem 1rem;
+    }
+
+    footer {
+      background-color: #f8f9fa;
+      padding: 2rem 0;
+      margin-top: 4rem;
+      border-top: 1px solid #e0e0e0;
+    }
+
+    .btn-outline-light {
+      margin-top: 1rem;
+    }
+  </style>
+</head>
+<body>
+  <!-- Navigation -->
+  <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <div class="container">
+      <a class="navbar-brand fw-semibold" href="/">MH Classifier</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav me-auto">
+          <li class="nav-item">
+            <a class="nav-link" href="/">Home</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link active" href="/learn_more">How It Works</a>
+          </li>
+        </ul>
+        <div class="d-flex">
+          <a href="/login" class="btn btn-outline-light">Login</a>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Hero Section -->
+  <section class="hero-section">
+    <div class="container">
+      <h1>How Does It Work?</h1>
+      <p>Understand the science and tech behind our mental health survey tool.</p>
+    </div>
+  </section>
+
+  <!-- Content Section -->
+  <div class="container content-section">
+    <div class="row">
+      <div class="col-md-10 mx-auto">
+        <h3>The Survey</h3>
+        <p>We use a simplified version of the PHQ-9 questionnaire, a widely used tool in mental health screening. It helps identify signs of depression based on your recent emotional and behavioral state.</p>
+
+        <h3>Our Classifier</h3>
+        <p>Your answers are processed using a logistic regression model trained on realistic, anonymized data. This model categorizes your response to help you reflect on your mental state — instantly.</p>
+
+        <h3>Your Privacy</h3>
+        <p>This is a student project, and your input is never stored or shared. We respect your privacy — all processing happens in-memory without saving personal details.</p>
+
+        <h3>Disclaimer</h3>
+        <p>This tool does not replace professional evaluation. Always consult a qualified mental health provider if you have concerns.</p>
+
+        <a href="/survey" class="btn btn-primary mt-3">Take the Survey</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer class="text-center mt-5">
+    <div class="container">
+      <p class="mb-1">&copy; 2025 Mental Health Classifier Project</p>
+      <small class="text-muted">Made for a school project with ❤️ and lots of debugging.</small>
+    </div>
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

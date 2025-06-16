@@ -1,6 +1,6 @@
 # Project Dependencies
 
-## 📦 Core Requirements
+## - Core Requirements
 
 ```text
 Flask==2.3.2
@@ -12,13 +12,13 @@ Flask-Migrate==4.0.4
 python-dotenv==1.0.0
 ```
 
-## 🗃️ Database
+## - Database
 
 ```text
 SQLAlchemy==2.0.19
 pyodbc==4.0.39          
 
-## 🔒 Authentication & Security
+## - Authentication & Security
 
 ```text
 bcrypt==4.0.1
@@ -26,7 +26,7 @@ itsdangerous==2.1.2
 email-validator==2.0.0
 ```
 
-## 🤖 Machine Learning
+## - Machine Learning
 
 ```text
 numpy==1.24.3
@@ -34,20 +34,20 @@ joblib==1.3.2
 scikit-learn==1.3.0    
 ```
 
-## 💅 Frontend
+## - Frontend
 
 ```text
 Flask-Bootstrap==3.3.7.1
 ```
 
-## 🧪 Development & Testing
+## - Development & Testing
 
 ```text
 pytest==7.4.0
 Faker==19.3.0
 ```
 
-## 🚀 Production (Optional)
+## - Production (Optional)
 
 ```text
 gunicorn==20.1.0        
@@ -55,7 +55,7 @@ gunicorn==20.1.0
 
 ---
 
-## 📥 Installation
+## - Installation
 
 ```bash
 pip install -r requirements.txt
@@ -63,7 +63,7 @@ pip install -r requirements.txt
 
 ---
 
-## 📝 Notes
+## - Notes
 
 - **SQLite**: Included in Python standard library (no additional package needed for development)
 - **MSSQL**: Requires ODBC drivers installed on system
@@ -73,7 +73,7 @@ pip install -r requirements.txt
 
 ---
 
-## 🔧 Development Setup
+## - Development Setup
 
 Create virtual environment:
 
@@ -92,6 +92,6 @@ pip install -r requirements.txt
 
 ---
 
-## 🏷️ Version Pinning
+## - Version Pinning
 
 All packages are version-pinned to ensure consistent behavior across installations.

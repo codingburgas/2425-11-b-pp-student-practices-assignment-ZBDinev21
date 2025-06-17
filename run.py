@@ -2,6 +2,8 @@ from flask import Flask, render_template, request, redirect, url_for, flash, ses
 
 app = Flask(__name__)
 app.secret_key = 'your_secret_key_here'
+
+# In-memory user list
 user_profiles = []
 
 @app.route('/')
@@ -11,7 +13,6 @@ def home():
 @app.route('/learn_more')
 def learn_more():
     return render_template('learn_more.html')
-
 
 @app.route('/survey', methods=['GET', 'POST'])
 def survey():
@@ -36,19 +37,20 @@ def survey():
 
     return render_template('survey.html')
 
-
 @app.route('/view_results')
 def view_results():
-    if 'survey_results' not in session or 'survey_score' not in session:
-        flash('No survey results found. Please complete the survey first.', 'error')
+    if 'survey_results' not in session:
+        flash("No survey results found. Please complete the survey first.")
         return redirect(url_for('survey'))
 
-    return render_template('view_results.html', results=session['survey_results'], score=session['survey_score'])
-
+    results = session['survey_results']
+    score = session['survey_score']
+    return render_template('view_results.html', results=results, score=score)
 
 @app.route('/edit_profile', methods=['GET', 'POST'])
 def edit_profile():
     if request.method == 'POST':
+        flash("Profile updated (not saved permanently - demo only).")
         return redirect(url_for('home'))
     return render_template('edit_profile.html')
 
@@ -69,8 +71,8 @@ def login():
                 'password': password,
                 'email': request.form.get('email'),
                 'age': request.form.get('age'),
-                'role': request.form['role'],
-                'gender': request.form['gender']
+                'role': request.form.get('role'),
+                'gender': request.form.get('gender')
             }
             user_profiles.append(profile)
             session['user'] = username

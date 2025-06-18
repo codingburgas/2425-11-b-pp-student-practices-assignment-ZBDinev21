@@ -37,7 +37,7 @@ def survey():
 
     return render_template('survey.html')
 
-@app.route('/view_results')
+@app.route('/view_results', methods=['GET', 'POST'])
 def view_results():
     if 'survey_results' not in session:
         flash("No survey results found. Please complete the survey first.")

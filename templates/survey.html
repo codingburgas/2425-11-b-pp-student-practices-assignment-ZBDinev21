@@ -54,7 +54,7 @@
   <!-- Survey Form -->
   <div class="container">
     <div class="form-card mx-auto mt-5" style="max-width: 700px;">
-      <form action="/view_results" method="POST">
+      <form action="view_results.html" method="GET">
         {% for i in range(1, 16) %}
         <div class="mb-3">
           <label class="form-label">{{ loop.index }}.
@@ -63,7 +63,7 @@
             {% elif i == 3 %}How often have you had trouble falling or staying asleep, or sleeping too much?
             {% elif i == 4 %}How often have you felt tired or had little energy?
             {% elif i == 5 %}How often have you had poor appetite or overeating?
-            {% elif i == 6 %}How often have you felt bad about yourself — or that you’re a failure or have let yourself or your family down?
+            {% elif i == 6 %}How often have you felt bad about yourself — or that you're a failure or have let yourself or your family down?
             {% elif i == 7 %}How often have you had trouble concentrating on things, such as reading or watching TV?
             {% elif i == 8 %}How often have you moved or spoken slowly — or been fidgety/restless more than usual?
             {% elif i == 9 %}How often have you had thoughts that you would be better off dead or of hurting yourself?

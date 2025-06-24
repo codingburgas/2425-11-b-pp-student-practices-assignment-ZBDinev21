@@ -25,6 +25,15 @@
       box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
       margin-top: -60px;
     }
+
+    .profile-pic {
+      width: 120px;
+      height: 120px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 4px solid white;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    }
   </style>
 </head>
 <body>
@@ -47,6 +56,11 @@
 
   <!-- Gradient Header -->
   <div class="gradient-section text-center">
+    <div class="d-flex justify-content-center">
+      <img src="https://ui-avatars.com/api/?name={{ user.username }}&background=7f7fd5&color=fff&size=128"
+           class="profile-pic mb-3"
+           alt="Profile Picture">
+    </div>
     <h2>Edit Your Profile</h2>
     <p class="lead">Update your details to personalize your experience.</p>
   </div>
@@ -54,21 +68,41 @@
   <!-- Profile Form -->
   <div class="container">
     <div class="form-card mx-auto mt-5" style="max-width: 700px;">
-      <form action="/update_profile" method="POST">
+      <form method="POST" action="/edit_profile">
         <div class="mb-3">
-          <label for="name" class="form-label">Full Name</label>
-          <input type="text" class="form-control" name="name" id="name" value="John Doe" required />
+          <label for="username" class="form-label">Username</label>
+          <input type="text" class="form-control" id="username" value="{{ user.username }}" readonly>
         </div>
         <div class="mb-3">
           <label for="email" class="form-label">Email</label>
-          <input type="email" class="form-control" name="email" id="email" value="john@example.com" required />
+          <input type="email" class="form-control" name="email" id="email"
+                 value="{{ user.email if user.email else '' }}" required>
         </div>
         <div class="mb-3">
           <label for="age" class="form-label">Age</label>
-          <input type="number" class="form-control" name="age" id="age" min="10" max="100" />
+          <input type="number" class="form-control" name="age" id="age"
+                 min="10" max="120" value="{{ user.age if user.age else '' }}">
+        </div>
+        <div class="mb-3">
+          <label class="form-label">Role</label>
+          <select name="role" class="form-select">
+            <option value="customer" {% if user.role == 'customer' %}selected{% endif %}>Customer</option>
+            <option value="admin" {% if user.role == 'admin' %}selected{% endif %}>Administrator</option>
+          </select>
+        </div>
+        <div class="mb-3">
+          <label class="form-label">Gender</label>
+          <select name="gender" class="form-select">
+            <option value="">Select Gender</option>
+            <option value="female" {% if user.gender == 'female' %}selected{% endif %}>Female</option>
+            <option value="male" {% if user.gender == 'male' %}selected{% endif %}>Male</option>
+            <option value="other" {% if user.gender == 'other' %}selected{% endif %}>Other</option>
+            <option value="prefer_not" {% if user.gender == 'prefer_not' %}selected{% endif %}>Prefer not to say</option>
+          </select>
         </div>
         <div class="text-center mt-4">
-          <button type="submit" class="btn btn-primary btn-lg">Save Changes</button>
+          <button type="submit" class="btn btn-primary btn-lg px-4">Save Changes</button>
+          <a href="/" class="btn btn-outline-secondary btn-lg px-4 ms-2">Cancel</a>
         </div>
       </form>
     </div>

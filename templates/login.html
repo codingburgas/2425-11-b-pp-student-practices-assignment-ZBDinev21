@@ -49,6 +49,13 @@
     .alert {
       margin-bottom: 15px;
     }
+
+    .email-note {
+      font-size: 0.8rem;
+      color: #6c757d;
+      margin-top: -10px;
+      margin-bottom: 15px;
+    }
   </style>
 </head>
 <body>
@@ -81,14 +88,10 @@
       <input type="password" name="password" class="form-control" placeholder="Password" required />
 
       <div class="form-extra" id="extra-fields">
-        <input type="email" name="email" class="form-control" placeholder="Email (optional)" />
-        <input type="number" name="age" class="form-control" placeholder="Age" min="10" max="120" />
+        <input type="email" name="email" class="form-control" placeholder="Email" required />
+        <div class="email-note">Required for registration. We'll send a welcome email.</div>
 
-        <select name="role" class="form-select">
-          <option value="">Select Role</option>
-          <option value="customer">Customer</option>
-          <option value="admin">Administrator</option>
-        </select>
+        <input type="number" name="age" class="form-control" placeholder="Age" min="10" max="120" />
 
         <select name="gender" class="form-select">
           <option value="">Select Gender</option>
@@ -101,7 +104,7 @@
 
       <button type="submit" class="btn btn-primary btn-login mt-3">Continue</button>
     </form>
-    <p class="text-muted text-center mt-3">Your data is not stored. This is for demo use only.</p>
+    <p class="text-muted text-center mt-3">Your data is securely stored and protected.</p>
   </div>
 
   <script>
@@ -114,9 +117,11 @@
       if (registerRadio.checked) {
         extraFields.style.display = 'block';
         modeInput.value = 'register';
+        document.querySelector('[name="email"]').required = true;
       } else {
         extraFields.style.display = 'none';
         modeInput.value = 'login';
+        document.querySelector('[name="email"]').required = false;
       }
     }
 

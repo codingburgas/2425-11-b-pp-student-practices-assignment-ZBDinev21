@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, redirect, url_for, flash, session
+from flask import Flask, render_template, request, redirect, url_for, flash, session, g
 from flask_sqlalchemy import SQLAlchemy
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_mail import Mail, Message
@@ -22,7 +22,6 @@ app.config['MAIL_DEFAULT_SENDER'] = os.getenv('MAIL_DEFAULT_SENDER', 'your_email
 # Initialize extensions
 db = SQLAlchemy(app)
 mail = Mail(app)
-
 
 # Models
 class User(db.Model):
@@ -48,7 +47,23 @@ with app.app_context():
     db.create_all()
 
 
-# Helper function for sending emails
+# Before request: Load user for every request
+@app.before_request
+def load_logged_in_user():
+    user_id = session.get('user_id')
+    if user_id:
+        g.user = User.query.get(user_id)
+    else:
+        g.user = None
+
+
+# Context processor: make user available in templates
+@app.context_processor
+def inject_user():
+    return dict(user=g.user)
+
+
+# Helper function to send emails
 def send_email(recipient, subject, template, **kwargs):
     try:
         msg = Message(
@@ -66,9 +81,6 @@ def send_email(recipient, subject, template, **kwargs):
 # Routes
 @app.route('/')
 def home():
-    if 'user' in session:
-        user = User.query.filter_by(username=session['user']).first()
-        return render_template('home.html', user=user)
     return render_template('home.html')
 
 
@@ -79,7 +91,7 @@ def learn_more():
 
 @app.route('/survey', methods=['GET', 'POST'])
 def survey():
-    if 'user' not in session:
+    if not g.user:
         flash('Please login to take the survey', 'error')
         return redirect(url_for('login'))
 
@@ -98,18 +110,16 @@ def survey():
             flash('Invalid answer format', 'error')
             return redirect(url_for('survey'))
 
-        user = User.query.filter_by(username=session['user']).first()
-        survey_result = SurveyResult(user_id=user.id, answers=answers, score=score)
+        survey_result = SurveyResult(user_id=g.user.id, answers=answers, score=score)
         db.session.add(survey_result)
         db.session.commit()
 
-        # Send survey results email
-        if user.email:
+        if g.user.email:
             send_email(
-                user.email,
+                g.user.email,
                 "Your MH Classifier Survey Results",
                 "survey_results.html",
-                username=user.username,
+                username=g.user.username,
                 score=score,
                 results_url=url_for('view_results', _external=True)
             )
@@ -123,7 +133,7 @@ def survey():
 
 @app.route('/view_results')
 def view_results():
-    if 'user' not in session:
+    if not g.user:
         flash('Please login to view results', 'error')
         return redirect(url_for('login'))
 
@@ -138,30 +148,27 @@ def view_results():
 
 @app.route('/edit_profile', methods=['GET', 'POST'])
 def edit_profile():
-    if 'user' not in session:
+    if not g.user:
         flash('Please login to edit profile', 'error')
         return redirect(url_for('login'))
-
-    user = User.query.filter_by(username=session['user']).first()
 
     if request.method == 'POST':
         new_email = request.form.get('email')
 
-        # Check if email is being changed and if it's already taken
-        if new_email and new_email != user.email:
+        if new_email and new_email != g.user.email:
             if User.query.filter_by(email=new_email).first():
                 flash("Email already in use by another account", 'error')
                 return redirect(url_for('edit_profile'))
-            user.email = new_email
+            g.user.email = new_email
 
-        user.age = request.form.get('age')
-        user.role = request.form.get('role')
-        user.gender = request.form.get('gender')
+        g.user.age = request.form.get('age')
+        g.user.role = request.form.get('role')
+        g.user.gender = request.form.get('gender')
         db.session.commit()
         flash("Profile updated successfully.")
         return redirect(url_for('home'))
 
-    return render_template('edit_profile.html', user=user)
+    return render_template('edit_profile.html', user=g.user)
 
 
 @app.route('/login', methods=['GET', 'POST'])
@@ -193,7 +200,9 @@ def login():
             db.session.add(user)
             db.session.commit()
 
-            # Send welcome email
+            session['user_id'] = user.id
+            flash("Registration successful.")
+
             if email:
                 send_email(
                     email,
@@ -203,14 +212,12 @@ def login():
                     dashboard_url=url_for('home', _external=True)
                 )
 
-            session['user'] = username
-            flash("Registration successful.")
             return redirect(url_for('home'))
 
         elif mode == 'login':
             user = User.query.filter_by(username=username).first()
             if user and check_password_hash(user.password, password):
-                session['user'] = username
+                session['user_id'] = user.id
                 flash("Login successful.")
                 return redirect(url_for('home'))
             else:
@@ -222,7 +229,7 @@ def login():
 
 @app.route('/logout')
 def logout():
-    session.pop('user', None)
+    session.clear()
     flash("You have been logged out.")
     return redirect(url_for('home'))
 

@@ -14,14 +14,12 @@
       flex-direction: column;
       min-height: 100vh;
     }
-
     .gradient-section {
       background: linear-gradient(135deg, #7f7fd5, #86a8e7, #91eae4);
       padding: 4rem 1rem;
       border-radius: 0 0 40px 40px;
       color: white;
     }
-
     .results-card {
       background-color: white;
       padding: 3rem;
@@ -38,25 +36,20 @@
       font-style: italic;
       color: #4a4a4a;
     }
-
-    /* Accessibility improvements */
     .btn:focus, .navbar-toggler:focus {
       box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
     }
-
     footer {
       margin-top: auto;
       padding: 2rem 0;
       background-color: #f8f9fa;
     }
-
     .list-group-item {
       padding: 1rem 1.25rem;
     }
   </style>
 </head>
 <body>
-  <!-- Navigation -->
   <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
     <div class="container">
       <a class="navbar-brand fw-semibold" href="/">MH Classifier</a>
@@ -68,87 +61,82 @@
           <li class="nav-item"><a class="nav-link" href="/">Home</a></li>
           <li class="nav-item"><a class="nav-link" href="/learn_more">How It Works</a></li>
         </ul>
-        <a href="/login" class="btn btn-outline-light">Login</a>
+        {% if user %}
+          <a href="/logout" class="btn btn-outline-light">Logout</a>
+        {% else %}
+          <a href="/login" class="btn btn-outline-light">Login</a>
+        {% endif %}
       </div>
     </div>
   </nav>
 
   <main>
-    <!-- Gradient Header -->
     <div class="gradient-section text-center">
       <h1 class="h2">Your Survey Results</h1>
       <p class="lead">See your responses below. Remember, this is not a diagnosis.</p>
     </div>
 
-    <!-- Results Card -->
     <div class="container">
       <div class="results-card mx-auto mt-5" style="max-width: 700px;">
         <h2 class="h4 mb-4">Your Answers</h2>
         <ol class="list-group list-group-numbered mb-4">
+          {% for i in range(1, 16) %}
           <li class="list-group-item d-flex flex-column">
-            <span class="question">How often have you felt little interest or pleasure in doing things?</span>
-            <span class="answer" id="q1-answer"></span>
+            <span class="question">
+              {% if i == 1 %}How often have you felt little interest or pleasure in doing things?
+              {% elif i == 2 %}How often have you felt down, depressed, or hopeless?
+              {% elif i == 3 %}How often have you had trouble falling or staying asleep, or sleeping too much?
+              {% elif i == 4 %}How often have you felt tired or had little energy?
+              {% elif i == 5 %}How often have you had poor appetite or overeating?
+              {% elif i == 6 %}How often have you felt bad about yourself — or that you're a failure or have let yourself or your family down?
+              {% elif i == 7 %}How often have you had trouble concentrating on things, such as reading or watching TV?
+              {% elif i == 8 %}How often have you moved or spoken slowly — or been fidgety/restless more than usual?
+              {% elif i == 9 %}How often have you had thoughts that you would be better off dead or of hurting yourself?
+              {% elif i == 10 %}How often do you feel overwhelmed by daily responsibilities?
+              {% elif i == 11 %}How often do you feel anxious or on edge?
+              {% elif i == 12 %}How often do you avoid social interactions?
+              {% elif i == 13 %}How often do you feel confident about yourself?
+              {% elif i == 14 %}How often do you feel hopeful about the future?
+              {% elif i == 15 %}How supported do you feel by friends or family?
+              {% endif %}
+            </span>
+            <span class="answer">
+              {% if results['q' ~ i] == '0' %}
+                {% if i in [13, 14] %}Always
+                {% elif i == 15 %}Very supported
+                {% elif i == 12 %}Never
+                {% elif i == 10 %}Never
+                {% else %}Not at all
+                {% endif %}
+              {% elif results['q' ~ i] == '1' %}
+                {% if i in [13, 14] %}Most of the time
+                {% elif i == 15 %}Somewhat supported
+                {% elif i == 12 %}Rarely
+                {% elif i == 10 %}Sometimes
+                {% else %}Several days
+                {% endif %}
+              {% elif results['q' ~ i] == '2' %}
+                {% if i in [13, 14] %}Sometimes
+                {% elif i == 15 %}Rarely supported
+                {% elif i == 12 %}Sometimes
+                {% elif i == 10 %}Often
+                {% else %}More than half the days
+                {% endif %}
+              {% elif results['q' ~ i] == '3' %}
+                {% if i in [13, 14] %}Rarely or never
+                {% elif i == 15 %}Not at all supported
+                {% elif i == 12 %}Frequently
+                {% elif i == 10 %}Always
+                {% else %}Nearly every day
+                {% endif %}
+              {% endif %}
+            </span>
           </li>
-          <li class="list-group-item d-flex flex-column">
-            <span class="question">How often have you felt down, depressed, or hopeless?</span>
-            <span class="answer" id="q2-answer"></span>
-          </li>
-          <li class="list-group-item d-flex flex-column">
-            <span class="question">How often have you had trouble falling or staying asleep, or sleeping too much?</span>
-            <span class="answer" id="q3-answer"></span>
-          </li>
-          <li class="list-group-item d-flex flex-column">
-            <span class="question">How often have you felt tired or had little energy?</span>
-            <span class="answer" id="q4-answer"></span>
-          </li>
-          <li class="list-group-item d-flex flex-column">
-            <span class="question">How often have you had poor appetite or overeating?</span>
-            <span class="answer" id="q5-answer"></span>
-          </li>
-          <li class="list-group-item d-flex flex-column">
-            <span class="question">How often have you felt bad about yourself — or that you're a failure or have let yourself or your family down?</span>
-            <span class="answer" id="q6-answer"></span>
-          </li>
-          <li class="list-group-item d-flex flex-column">
-            <span class="question">How often have you had trouble concentrating on things, such as reading or watching TV?</span>
-            <span class="answer" id="q7-answer"></span>
-          </li>
-          <li class="list-group-item d-flex flex-column">
-            <span class="question">How often have you moved or spoken slowly — or been fidgety/restless more than usual?</span>
-            <span class="answer" id="q8-answer"></span>
-          </li>
-          <li class="list-group-item d-flex flex-column">
-            <span class="question">How often have you had thoughts that you would be better off dead or of hurting yourself?</span>
-            <span class="answer" id="q9-answer"></span>
-          </li>
-          <li class="list-group-item d-flex flex-column">
-            <span class="question">How often do you feel overwhelmed by daily responsibilities?</span>
-            <span class="answer" id="q10-answer"></span>
-          </li>
-          <li class="list-group-item d-flex flex-column">
-            <span class="question">How often do you feel anxious or on edge?</span>
-            <span class="answer" id="q11-answer"></span>
-          </li>
-          <li class="list-group-item d-flex flex-column">
-            <span class="question">How often do you avoid social interactions?</span>
-            <span class="answer" id="q12-answer"></span>
-          </li>
-          <li class="list-group-item d-flex flex-column">
-            <span class="question">How often do you feel confident about yourself?</span>
-            <span class="answer" id="q13-answer"></span>
-          </li>
-          <li class="list-group-item d-flex flex-column">
-            <span class="question">How often do you feel hopeful about the future?</span>
-            <span class="answer" id="q14-answer"></span>
-          </li>
-          <li class="list-group-item d-flex flex-column">
-            <span class="question">How supported do you feel by friends or family?</span>
-            <span class="answer" id="q15-answer"></span>
-          </li>
+          {% endfor %}
         </ol>
 
-        <div class="alert alert-info text-center" role="alert" id="score-display" style="display: none;">
-          <strong>Your total score:</strong> <span id="total-score"></span>
+        <div class="alert alert-info text-center" role="alert">
+          <strong>Your total score:</strong> {{ score }}
         </div>
 
         <div class="text-center mt-4">
@@ -159,7 +147,6 @@
     </div>
   </main>
 
-  <!-- Footer -->
   <footer class="bg-light">
     <div class="container">
       <p class="mb-1">&copy; 2025 Mental Health Classifier Project</p>
@@ -168,64 +155,5 @@
   </footer>
 
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-  <script>
-    // Parse URL parameters
-    function getUrlParams() {
-      const params = new URLSearchParams(window.location.search);
-      const result = {};
-
-      for (let i = 1; i <= 15; i++) {
-        const val = params.get(`q${i}`);
-        if (val !== null) {
-          result[`q${i}`] = parseInt(val);
-        }
-      }
-
-      return result;
-    }
-
-    // Answer options mapping
-    const answerOptions = {
-      q1: ["Not at all", "Several days", "More than half the days", "Nearly every day"],
-      q2: ["Not at all", "Several days", "More than half the days", "Nearly every day"],
-      q3: ["Not at all", "Several days", "More than half the days", "Nearly every day"],
-      q4: ["Not at all", "Several days", "More than half the days", "Nearly every day"],
-      q5: ["Not at all", "Several days", "More than half the days", "Nearly every day"],
-      q6: ["Not at all", "Several days", "More than half the days", "Nearly every day"],
-      q7: ["Not at all", "Several days", "More than half the days", "Nearly every day"],
-      q8: ["Not at all", "Several days", "More than half the days", "Nearly every day"],
-      q9: ["Not at all", "Several days", "More than half the days", "Nearly every day"],
-      q10: ["Never", "Sometimes", "Often", "Always"],
-      q11: ["Not at all", "Several days", "More than half the days", "Nearly every day"],
-      q12: ["Never", "Rarely", "Sometimes", "Frequently"],
-      q13: ["Always", "Most of the time", "Sometimes", "Rarely or never"],
-      q14: ["Always", "Most of the time", "Sometimes", "Rarely or never"],
-      q15: ["Very supported", "Somewhat supported", "Rarely supported", "Not at all supported"]
-    };
-
-    // Display results
-    function displayResults() {
-      const results = getUrlParams();
-      let totalScore = 0;
-
-      for (let i = 1; i <= 15; i++) {
-        const key = `q${i}`;
-        if (results[key] !== undefined) {
-          const answerIndex = results[key];
-          const answerText = answerOptions[key][answerIndex];
-          document.getElementById(`${key}-answer`).textContent = answerText;
-          totalScore += answerIndex;
-        }
-      }
-
-      if (totalScore > 0) {
-        document.getElementById('total-score').textContent = totalScore;
-        document.getElementById('score-display').style.display = 'block';
-      }
-    }
-
-    // Initialize when page loads
-    window.onload = displayResults;
-  </script>
 </body>
 </html>

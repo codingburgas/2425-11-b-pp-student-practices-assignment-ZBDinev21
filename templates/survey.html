@@ -10,14 +10,12 @@
       font-family: 'Segoe UI', sans-serif;
       background-color: #f5f7fa;
     }
-
     .gradient-section {
       background: linear-gradient(135deg, #7f7fd5, #86a8e7, #91eae4);
       padding: 4rem 1rem;
       border-radius: 0 0 40px 40px;
       color: white;
     }
-
     .form-card {
       background-color: white;
       padding: 3rem;
@@ -28,7 +26,8 @@
   </style>
 </head>
 <body>
-  <!-- Navigation -->
+
+  <!-- Navbar -->
   <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
     <div class="container">
       <a class="navbar-brand fw-semibold" href="#">MH Classifier</a>
@@ -40,12 +39,16 @@
           <li class="nav-item"><a class="nav-link" href="/">Home</a></li>
           <li class="nav-item"><a class="nav-link" href="/learn_more">How It Works</a></li>
         </ul>
-        <a href="/login" class="btn btn-outline-light">Login</a>
+        {% if user %}
+          <a href="/logout" class="btn btn-outline-light">Logout</a>
+        {% else %}
+          <a href="/login" class="btn btn-outline-light">Login</a>
+        {% endif %}
       </div>
     </div>
   </nav>
 
-  <!-- Gradient Header -->
+  <!-- Header -->
   <div class="gradient-section text-center">
     <h2>Take the Mental Health Survey</h2>
     <p class="lead">Answer honestly — it's short and anonymous.</p>
@@ -54,45 +57,50 @@
   <!-- Survey Form -->
   <div class="container">
     <div class="form-card mx-auto mt-5" style="max-width: 700px;">
-      <form action="view_results.html" method="GET">
-        {% for i in range(1, 16) %}
+      <form method="POST" action="/survey">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+
+        {% set questions = [
+          "How often have you felt little interest or pleasure in doing things?",
+          "How often have you felt down, depressed, or hopeless?",
+          "How often have you had trouble falling or staying asleep, or sleeping too much?",
+          "How often have you felt tired or had little energy?",
+          "How often have you had poor appetite or overeating?",
+          "How often have you felt bad about yourself — or that you're a failure or have let yourself or your family down?",
+          "How often have you had trouble concentrating on things, such as reading or watching TV?",
+          "How often have you moved or spoken slowly — or been fidgety/restless more than usual?",
+          "How often have you had thoughts that you would be better off dead or of hurting yourself?",
+          "How often do you feel overwhelmed by daily responsibilities?",
+          "How often do you feel anxious or on edge?",
+          "How often do you avoid social interactions?",
+          "How often do you feel confident about yourself?",
+          "How often do you feel hopeful about the future?",
+          "How supported do you feel by friends or family?"
+        ] %}
+
+        {% for question in questions %}
+        {% set idx = loop.index %}
         <div class="mb-3">
-          <label class="form-label">{{ loop.index }}.
-            {% if i == 1 %}How often have you felt little interest or pleasure in doing things?
-            {% elif i == 2 %}How often have you felt down, depressed, or hopeless?
-            {% elif i == 3 %}How often have you had trouble falling or staying asleep, or sleeping too much?
-            {% elif i == 4 %}How often have you felt tired or had little energy?
-            {% elif i == 5 %}How often have you had poor appetite or overeating?
-            {% elif i == 6 %}How often have you felt bad about yourself — or that you're a failure or have let yourself or your family down?
-            {% elif i == 7 %}How often have you had trouble concentrating on things, such as reading or watching TV?
-            {% elif i == 8 %}How often have you moved or spoken slowly — or been fidgety/restless more than usual?
-            {% elif i == 9 %}How often have you had thoughts that you would be better off dead or of hurting yourself?
-            {% elif i == 10 %}How often do you feel overwhelmed by daily responsibilities?
-            {% elif i == 11 %}How often do you feel anxious or on edge?
-            {% elif i == 12 %}How often do you avoid social interactions?
-            {% elif i == 13 %}How often do you feel confident about yourself?
-            {% elif i == 14 %}How often do you feel hopeful about the future?
-            {% elif i == 15 %}How supported do you feel by friends or family?
-            {% endif %}
-          </label>
-          <select class="form-select" name="q{{ i }}" required>
+          <label for="q{{ idx }}" class="form-label">{{ idx }}. {{ question }}</label>
+          <select class="form-select" name="q{{ idx }}" id="q{{ idx }}" required>
             <option value="">Select...</option>
-            {% if i in [13, 14] %}
+
+            {% if idx in [13, 14] %}
               <option value="0">Always</option>
               <option value="1">Most of the time</option>
               <option value="2">Sometimes</option>
               <option value="3">Rarely or never</option>
-            {% elif i == 15 %}
+            {% elif idx == 15 %}
               <option value="0">Very supported</option>
               <option value="1">Somewhat supported</option>
               <option value="2">Rarely supported</option>
               <option value="3">Not at all supported</option>
-            {% elif i == 12 %}
+            {% elif idx == 12 %}
               <option value="0">Never</option>
               <option value="1">Rarely</option>
               <option value="2">Sometimes</option>
               <option value="3">Frequently</option>
-            {% elif i == 10 %}
+            {% elif idx == 10 %}
               <option value="0">Never</option>
               <option value="1">Sometimes</option>
               <option value="2">Often</option>

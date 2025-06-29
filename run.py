@@ -2,6 +2,7 @@ from flask import Flask, render_template, request, redirect, url_for, flash, ses
 from flask_sqlalchemy import SQLAlchemy
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_mail import Mail, Message
+from flask_wtf import CSRFProtect
 import os
 
 app = Flask(__name__)
@@ -22,6 +23,7 @@ app.config['MAIL_DEFAULT_SENDER'] = os.getenv('MAIL_DEFAULT_SENDER', 'your_email
 # Initialize extensions
 db = SQLAlchemy(app)
 mail = Mail(app)
+csrf = CSRFProtect(app)
 
 # Models
 class User(db.Model):
@@ -34,18 +36,15 @@ class User(db.Model):
     gender = db.Column(db.String(20))
     survey_results = db.relationship('SurveyResult', backref='user', lazy=True)
 
-
 class SurveyResult(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
     answers = db.Column(db.JSON)
     score = db.Column(db.Integer)
 
-
 # Create tables
 with app.app_context():
     db.create_all()
-
 
 # Before request: Load user for every request
 @app.before_request
@@ -56,12 +55,10 @@ def load_logged_in_user():
     else:
         g.user = None
 
-
 # Context processor: make user available in templates
 @app.context_processor
 def inject_user():
     return dict(user=g.user)
-
 
 # Helper function to send emails
 def send_email(recipient, subject, template, **kwargs):
@@ -77,17 +74,14 @@ def send_email(recipient, subject, template, **kwargs):
         app.logger.error(f"Failed to send email to {recipient}: {str(e)}")
         return False
 
-
 # Routes
 @app.route('/')
 def home():
     return render_template('home.html')
 
-
 @app.route('/learn_more')
 def learn_more():
     return render_template('learn_more.html')
-
 
 @app.route('/survey', methods=['GET', 'POST'])
 def survey():
@@ -130,7 +124,6 @@ def survey():
 
     return render_template('survey.html')
 
-
 @app.route('/view_results')
 def view_results():
     if not g.user:
@@ -145,7 +138,6 @@ def view_results():
     score = session['survey_score']
     return render_template('view_results.html', results=results, score=score)
 
-
 @app.route('/edit_profile', methods=['GET', 'POST'])
 def edit_profile():
     if not g.user:
@@ -154,6 +146,9 @@ def edit_profile():
 
     if request.method == 'POST':
         new_email = request.form.get('email')
+        new_age = request.form.get('age')
+        new_role = request.form.get('role')
+        new_gender = request.form.get('gender')
 
         if new_email and new_email != g.user.email:
             if User.query.filter_by(email=new_email).first():
@@ -161,15 +156,23 @@ def edit_profile():
                 return redirect(url_for('edit_profile'))
             g.user.email = new_email
 
-        g.user.age = request.form.get('age')
-        g.user.role = request.form.get('role')
-        g.user.gender = request.form.get('gender')
+        try:
+            if new_age:
+                g.user.age = int(new_age)
+            else:
+                g.user.age = None
+        except ValueError:
+            flash("Please enter a valid age", 'error')
+            return redirect(url_for('edit_profile'))
+
+        g.user.role = new_role if new_role else None
+        g.user.gender = new_gender if new_gender else None
+
         db.session.commit()
-        flash("Profile updated successfully.")
+        flash("Profile updated successfully!", 'success')
         return redirect(url_for('home'))
 
     return render_template('edit_profile.html', user=g.user)
-
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
@@ -226,18 +229,15 @@ def login():
 
     return render_template('login.html')
 
-
 @app.route('/logout')
 def logout():
     session.clear()
     flash("You have been logged out.")
     return redirect(url_for('home'))
 
-
 @app.errorhandler(404)
 def page_not_found(e):
     return render_template('404.html'), 404
-
 
 if __name__ == '__main__':
     app.run(debug=True)

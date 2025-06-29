@@ -14,7 +14,6 @@
       align-items: center;
       margin: 0;
     }
-
     .login-box {
       background-color: white;
       padding: 40px;
@@ -23,33 +22,27 @@
       width: 100%;
       max-width: 500px;
     }
-
     .form-control, .form-select {
       margin-bottom: 15px;
       border-radius: 8px;
     }
-
     .btn-login {
       width: 100%;
       padding: 10px;
       border-radius: 8px;
       font-weight: 500;
     }
-
     .toggle-section {
       display: flex;
       justify-content: center;
       margin-bottom: 20px;
     }
-
     .form-extra {
       display: none;
     }
-
     .alert {
       margin-bottom: 15px;
     }
-
     .email-note {
       font-size: 0.8rem;
       color: #6c757d;
@@ -62,16 +55,17 @@
   <div class="login-box">
     <h2 class="text-center mb-4">Log into your profile</h2>
 
-    {% with messages = get_flashed_messages() %}
+    {% with messages = get_flashed_messages(with_categories=true) %}
       {% if messages %}
-        {% for message in messages %}
-          <div class="alert alert-warning">{{ message }}</div>
+        {% for category, message in messages %}
+          <div class="alert alert-{{ category }}">{{ message }}</div>
         {% endfor %}
       {% endif %}
     {% endwith %}
 
-    <form method="POST" id="auth-form">
+    <form method="POST" action="/login" id="auth-form">
       <input type="hidden" name="mode" id="mode" value="login" />
+      <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
 
       <div class="toggle-section">
         <div class="form-check me-3">
@@ -117,19 +111,17 @@
       if (registerRadio.checked) {
         extraFields.style.display = 'block';
         modeInput.value = 'register';
-        document.querySelector('[name="email"]').required = true;
       } else {
         extraFields.style.display = 'none';
         modeInput.value = 'login';
-        document.querySelector('[name="email"]').required = false;
       }
     }
 
     loginRadio.addEventListener('change', toggleFields);
     registerRadio.addEventListener('change', toggleFields);
 
-    // Initial state
-    toggleFields();
+    // Initialize on page load
+    window.addEventListener('DOMContentLoaded', toggleFields);
   </script>
 </body>
 </html>

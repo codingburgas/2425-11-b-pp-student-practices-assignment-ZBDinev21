@@ -11,7 +11,6 @@
       font-family: 'Segoe UI', sans-serif;
       background-color: #f5f7fa;
     }
-
     .hero-section {
       background: linear-gradient(135deg, #7f7fd5, #86a8e7, #91eae4);
       color: white;
@@ -19,41 +18,34 @@
       text-align: center;
       border-radius: 0 0 40px 40px;
     }
-
     .hero-section h1 {
       font-size: 3rem;
       font-weight: 700;
     }
-
     .hero-section p {
       font-size: 1.2rem;
       margin-top: 1rem;
     }
-
     .feature-icon {
       font-size: 3rem;
       color: #6e8efb;
       margin-bottom: 1rem;
     }
-
     footer {
       background-color: #f8f9fa;
       padding: 2rem 0;
       margin-top: 4rem;
       border-top: 1px solid #e0e0e0;
     }
-
     .btn-light,
     .btn-outline-light {
       margin-right: 1rem;
     }
-
     .subtle-note {
       font-size: 0.95rem;
       color: #6c757d;
       margin-top: 1rem;
     }
-
     .welcome-message {
       color: white;
       margin-right: 1rem;
@@ -62,7 +54,6 @@
   </style>
 </head>
 <body>
-  <!-- Navigation -->
   <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
     <div class="container">
       <a class="navbar-brand fw-semibold" href="#">MH Classifier</a>
@@ -79,8 +70,8 @@
           </li>
         </ul>
         <div class="d-flex">
-          {% if 'user' in session %}
-            <span class="welcome-message d-none d-sm-inline">Welcome, {{ session['user'] }}</span>
+          {% if user %}
+            <span class="welcome-message d-none d-sm-inline">Welcome, {{ user.username }}</span>
             <a href="/edit_profile" class="btn btn-outline-light me-2">Edit Profile</a>
             <a href="/logout" class="btn btn-danger">Logout</a>
           {% else %}
@@ -91,7 +82,6 @@
     </div>
   </nav>
 
-  <!-- Hero Section -->
   <section class="hero-section">
     <div class="container">
       <h1>Check In with Yourself</h1>
@@ -102,7 +92,6 @@
     </div>
   </section>
 
-  <!-- Features Section -->
   <div class="container mt-5">
     <div class="row text-center">
       <div class="col-md-4">
@@ -132,7 +121,6 @@
     </div>
   </div>
 
-  <!-- Footer -->
   <footer class="text-center mt-5">
     <div class="container">
       <p class="mb-1">&copy; 2025 Mental Health Classifier Project</p>

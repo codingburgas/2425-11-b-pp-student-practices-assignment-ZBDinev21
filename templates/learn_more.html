@@ -11,7 +11,6 @@
       font-family: 'Segoe UI', sans-serif;
       background-color: #f5f7fa;
     }
-
     .hero-section {
       background: linear-gradient(135deg, #7f7fd5, #86a8e7, #91eae4);
       color: white;
@@ -19,35 +18,29 @@
       text-align: center;
       border-radius: 0 0 40px 40px;
     }
-
     .hero-section h1 {
       font-size: 3rem;
       font-weight: 700;
     }
-
     .hero-section p {
       font-size: 1.2rem;
       margin-top: 1rem;
     }
-
     .content-section {
       padding: 4rem 1rem;
     }
-
     footer {
       background-color: #f8f9fa;
       padding: 2rem 0;
       margin-top: 4rem;
       border-top: 1px solid #e0e0e0;
     }
-
     .btn-outline-light {
       margin-top: 1rem;
     }
   </style>
 </head>
 <body>
-  <!-- Navigation -->
   <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
     <div class="container">
       <a class="navbar-brand fw-semibold" href="/">MH Classifier</a>
@@ -64,13 +57,16 @@
           </li>
         </ul>
         <div class="d-flex">
-          <a href="/login" class="btn btn-outline-light">Login</a>
+          {% if user %}
+            <a href="/logout" class="btn btn-outline-light">Logout</a>
+          {% else %}
+            <a href="/login" class="btn btn-outline-light">Login</a>
+          {% endif %}
         </div>
       </div>
     </div>
   </nav>
 
-  <!-- Hero Section -->
   <section class="hero-section">
     <div class="container">
       <h1>How Does It Work?</h1>
@@ -78,7 +74,6 @@
     </div>
   </section>
 
-  <!-- Content Section -->
   <div class="container content-section">
     <div class="row">
       <div class="col-md-10 mx-auto">
@@ -99,7 +94,6 @@
     </div>
   </div>
 
-  <!-- Footer -->
   <footer class="text-center mt-5">
     <div class="container">
       <p class="mb-1">&copy; 2025 Mental Health Classifier Project</p>
